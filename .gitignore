@@ -1,0 +1,23 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+/mvnw
+/mvnw.cmd
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+bin/
+
+# Local storage and logs
+uploads/
+logs/
+*.log
+
+# Environment variables
+.env
+.env.local
+
+# MacOS
+.DS_Store

@@ -7,11 +7,12 @@ services:
       - "8080:8080"
     environment:
       - DB_HOST=postgres
-      - DB_NAME=memory
-      - DB_USER=postgres
-      - DB_PASSWORD=your_secure_password
+      - DB_NAME=${DB_NAME:-memory}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DEEP_SEEK_API_KEY=${DEEP_SEEK_API_KEY}
-      - APP_BASE_URL=http://your-server-ip:8080
+      - APP_BASE_URL=${APP_BASE_URL:-http://localhost:8080}
+      - JWT_SECRET=${JWT_SECRET}
     volumes:
       - ./uploads:/app/uploads
       - ./logs:/app/logs
@@ -25,9 +26,9 @@ services:
     image: postgres:16-alpine
     container_name: memory-db
     environment:
-      - POSTGRES_DB=memory
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=your_secure_password
+      - POSTGRES_DB=${DB_NAME:-memory}
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
