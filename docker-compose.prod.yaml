@@ -1,0 +1,48 @@
+services:
+  app:
+    build: .
+    image: memory-platform:latest
+    container_name: memory-app
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=postgres
+      - DB_NAME=memory
+      - DB_USER=postgres
+      - DB_PASSWORD=your_secure_password
+      - DEEP_SEEK_API_KEY=${DEEP_SEEK_API_KEY}
+      - APP_BASE_URL=http://your-server-ip:8080
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - memory-net
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: memory-db
+    environment:
+      - POSTGRES_DB=memory
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=your_secure_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - memory-net
+
+networks:
+  memory-net:
+    driver: bridge
+
+volumes:
+  pg_data:
