@@ -1,12 +1,4 @@
-# Stage 1: Build
-FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-# 跳过测试以加快构建速度
-RUN mvn clean package -DskipTests
-
-# Stage 2: Runtime
+# 使用本地 Java 运行时镜像
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
@@ -14,11 +6,11 @@ WORKDIR /app
 RUN apk add --no-cache tzdata
 ENV TZ=Asia/Shanghai
 
-# 创建上传目录
-RUN mkdir -p /app/uploads
+# 创建上传和日志目录
+RUN mkdir -p /app/uploads /app/logs
 
-# 从构建阶段拷贝 JAR 包
-COPY --from=build /app/target/*.jar app.jar
+# 直接复制已编译好的 JAR 包
+COPY memory-0.0.1-SNAPSHOT.jar app.jar
 
 # 暴露端口
 EXPOSE 8080
